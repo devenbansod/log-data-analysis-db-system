@@ -20,7 +20,7 @@ cd ..
 
 # Run the reducer
 cd reducer
-python main.py "../output/intermediate/forward.csv" "../output/intermediate/backward.csv" "../output/forward-reduced.csv" "../output/backward-reduced.csv"
+python main.py "../output/intermediate/forward.csv" "../output/intermediate/backward.csv" "../output/"
 cd ..
 
 # Import the reduced logs
@@ -38,23 +38,23 @@ cp $FORWARD_PATH "$IMPORT_DIR/forward-reduced.csv"
 ADD_FORWARD_EDGES_QUERY="\"
 USING PERIODIC COMMIT 500
 LOAD CSV FROM 'file:///forward-reduced.csv' as line
-MERGE (n1:PROCESS {process_id: line[1], name: line[2]})
-MERGE (n2:RESOURCE {name: line[4]})
+MERGE (n1:PROCESS {process_id: line[2], name: line[3]})
+MERGE (n2:RESOURCE {name: line[5]})
 WITH line,n1,n2
-CREATE (n1)-[:USES {ts: line[0], type: line[3]}]->(n2)
+CREATE (n1)-[:USES {ts: line[0], serial: line[1], type: line[4]}]->(n2)
 \""
 eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_FORWARD_EDGES_QUERY}"
 
 
 # Add backward reduced logs
-# cp $BACKWARD_PATH "$IMPORT_DIR/backward-reduced.csv"
+cp $BACKWARD_PATH "$IMPORT_DIR/backward-reduced.csv"
 
 ADD_BACKWARD_EDGES_QUERY="\"
 USING PERIODIC COMMIT 500
 LOAD CSV FROM 'file:///backward-reduced.csv' as line
-MERGE (n1:PROCESS {process_id: 'line[1]', name: line[2]})
-MERGE (n2:RESOURCE {name: line[4]})
+MERGE (n1:PROCESS {process_id: line[2], name: line[3]})
+MERGE (n2:RESOURCE {name: line[5]})
 WITH line,n1,n2
-CREATE (n1)-[:USES {ts: line[0], type: line[3]}]->(n2)
+CREATE (n1)-[:USES {ts: line[0], serial: line[1], type: line[4]}]->(n2)
 \""
-# eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_BACKWARD_EDGES_QUERY}"
+eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_BACKWARD_EDGES_QUERY}"
