@@ -42,7 +42,7 @@ def reduce(forward_file, backward_file, out_dir):
     events_final = copy.deepcopy(events)
     for event, time_interval in events.items():
         u, v, sys_call, id_ = event
-        # print(u, v, sys_call, id_)
+
         if len(stacks[(u, v, sys_call)]) == 0:
             stacks[(u, v, sys_call)].append(event)
         else:
@@ -67,8 +67,4 @@ def reduce(forward_file, backward_file, out_dir):
             else:
                 stacks[(u, v, sys_call)].append(event)
 
-    # print events_final
-    # print csv_details
     generate(events_final, csv_details, out_dir)
-
-    # return global_list_processed_files_forward, global_list_processed_files_backward

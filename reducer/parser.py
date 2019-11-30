@@ -83,5 +83,4 @@ def parse(forward_file, backward_file):
     	meta[id] = metaData
         id += 1
 
-    # print "ID:", id
     return parents, children, events, meta, parents_id, children_id
