@@ -1,2 +1,4 @@
 tabulate
 neo4j
+natsort
+logging

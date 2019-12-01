@@ -2,8 +2,9 @@ import sys
 import time
 from decimal import Decimal
 from neo4j import GraphDatabase
-from cli import queries
 from tabulate import tabulate
+
+from cli import queries
 
 def print_commands():
     """
