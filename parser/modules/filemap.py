@@ -22,7 +22,7 @@ class FileMap(object):
         elif pid in self.imap and fd in self.imap[pid]:
             return self.imap[pid][fd]
         else:
-            log.debug("Failed to get inode for pid {0} fd {1}".format(pid, fd))
+            # log.debug("Failed to get inode for pid {0} fd {1}".format(pid, fd))
             return None
 
     def add_file(self, pid, fd, fname, inode):

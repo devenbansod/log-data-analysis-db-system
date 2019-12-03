@@ -2,6 +2,18 @@ from query_functions import *
 
 QUERIES = [
     {
+        'text': "Get a list of possibly corrupted processes given a corrupt process",
+        'follow_up': 'Enter the process ID (ex. 1234): ',
+        'query': get_possible_corrupted_processes_from_process_id,
+        'column_labels': ['Process ID', 'Process name']
+    },
+    {
+        'text': "Get a list of possibly corrupted processes given a corrupt process after a given timestamp",
+        'follow_up': 'Enter the process ID and start_time (ex. 1234 1541873682.803): ',
+        'query': get_possible_corrupted_processes_from_process_id_after_ts,
+        'column_labels': ['Process ID', 'Process name']
+    },
+    {
         'text': "Get a list of resources accessed by a process",
         'follow_up': 'Enter the process ID (ex. 1234): ',
         'query': get_resources_for_process_id,

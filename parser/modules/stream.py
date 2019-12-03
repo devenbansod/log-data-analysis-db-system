@@ -11,7 +11,7 @@ class Stream(object):
 
     def write(self, event):
         if event.is_corrupted():
-            log.warn("Log entry {0} is corrupted.".format(event.__str__()))
+            # log.warn("Log entry {0} is corrupted.".format(event.__str__()))
             return
         self.stream.write(event.__str__() + "\n")
 

@@ -6,7 +6,7 @@ if [[ $(id -u) -ne 0 ]] ; then
 fi
 
 LOCKDIR=".lock"
-MIN_NUM_FILES=10
+MIN_NUM_FILES=20
 
 # Remove the lock directory
 function cleanup {
@@ -32,18 +32,21 @@ if mkdir $LOCKDIR; then
       git init
     fi
 
-    result=$(git diff | grep "^+" | wc -l)
+    result=$(git diff being-watched.log | grep "^+" | wc -l)
     echo $result "lines added"
-    if [ $result < $MIN_NUM_FILES ]
+
+    # turn it into integers
+    result=$(($result+0))
+    MIN_NUM_FILES=$(($MIN_NUM_FILES+0))
+    if (($result < $MIN_NUM_FILES));
     then
-        echo "Less number, stopping"
+        echo "Less number of lines, stopping!"
+        exit
     fi
 
-    echo "Going ahead with reduction and data ingestion"
-
     # get the new logs
-    git diff | grep "^+" | cut -c2- > data/input.log
-    echo "$(tail -n +2 input.log)" > data/input.log
+    git diff being-watched.log | grep "^+" | cut -c2- > data/input.log
+    echo "$(tail -n +2 data/input.log)" > data/input.log
 
     # commit these changes
     commitmsg=$(date +%Y%m%d%H%M%S)

@@ -3,6 +3,40 @@ from constants import *
 def _check_if_path_is_config_file(filepath):
     return filepath in CONFIG_FILES or True
 
+def get_possible_corrupted_processes_from_process_id(tx, raw_inputs):
+    process_id = int(raw_inputs)
+
+    ret = set()
+    for record in tx.run(
+        "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) <-[USE2 :USES]- (PROC2: PROCESS) "
+        "WHERE toInteger(PROC.process_id) = $process_id AND PROC2.process_id <> PROC.process_id "
+        "AND (USE2.ts > USE.ts OR (USE2.ts = USE.ts AND USE2.serial > USE.serial)) "
+        "RETURN DISTINCT PROC2.process_id as PROCESS_ID, PROC2.name as PROCESS_NAME",
+        process_id=process_id
+    ):
+        ret.add((str(record['PROCESS_ID']), str(record['PROCESS_NAME'])))
+
+    return ret
+
+def get_possible_corrupted_processes_from_process_id_after_ts(tx, raw_inputs):
+    inputs = raw_inputs.split(' ')
+    process_id = int(inputs[0])
+    start_time = float(inputs[1])
+
+    ret = set()
+    for record in tx.run(
+        "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) <-[USE2 :USES]- (PROC2: PROCESS) "
+        "WHERE toInteger(PROC.process_id) = $process_id AND PROC2.process_id <> PROC.process_id "
+        "AND (USE2.ts > USE.ts OR (USE2.ts = USE.ts AND USE2.serial > USE.serial)) "
+        "AND toFloat(USE.ts) > $start_time "
+        "RETURN DISTINCT PROC2.process_id as PROCESS_ID, PROC2.name as PROCESS_NAME",
+        process_id=process_id,
+        start_time=start_time
+    ):
+        ret.add((str(record['PROCESS_ID']), str(record['PROCESS_NAME'])))
+
+    return ret
+
 def get_resources_for_process_id(tx, raw_inputs):
     process_id = int(raw_inputs)
 
@@ -227,7 +261,7 @@ def get_read_write_ratio_of_process(tx, raw_inputs):
         process_id=process_id,
         call_types=READ_SYSCALLS
     ):
-        read_count = record['COUNT']
+        read_count = int(record['COUNT'])
         break
 
     write_count = 0
@@ -238,16 +272,17 @@ def get_read_write_ratio_of_process(tx, raw_inputs):
         process_id=process_id,
         call_types=WRITE_SYSCALLS
     ):
-        write_count = record['COUNT']
+        write_count = int(record['COUNT'])
         break
 
     print('Number of reads:' , read_count)
     print('Number of writes:' , write_count)
 
+    ret = list()
     if (write_count > 0):
-        return set().add(float(read_count) / float(write_count))
-    else:
-        return set()
+        ret.append([float(read_count) / float(write_count)])
+
+    return ret
 
 def get_read_write_ratio_of_process_between_ts(tx, raw_inputs):
     inputs = raw_inputs.split(' ')
@@ -265,7 +300,7 @@ def get_read_write_ratio_of_process_between_ts(tx, raw_inputs):
         ts_start=start_time,
         ts_end=end_time
     ):
-        read_count = record['COUNT']
+        read_count = int(record['COUNT'])
         break
 
     write_count = 0
@@ -278,16 +313,17 @@ def get_read_write_ratio_of_process_between_ts(tx, raw_inputs):
         ts_start=start_time,
         ts_end=end_time
     ):
-        write_count = record['COUNT']
+        write_count = int(record['COUNT'])
         break
 
     print('Number of reads:' , read_count)
     print('Number of writes:' , write_count)
 
+    ret = list()
     if (write_count > 0):
-        return set().add(float(read_count) / float(write_count))
-    else:
-        return set()
+        ret.append([float(read_count) / float(write_count)])
+
+    return ret
 
 def get_read_write_ratio_of_program(tx, raw_inputs):
     process_name = raw_inputs
@@ -300,7 +336,7 @@ def get_read_write_ratio_of_program(tx, raw_inputs):
         program_name=process_name,
         call_types=READ_SYSCALLS
     ):
-        read_count = record['COUNT']
+        read_count = int(record['COUNT'])
         break
 
     write_count = 0
@@ -311,16 +347,17 @@ def get_read_write_ratio_of_program(tx, raw_inputs):
         program_name=process_name,
         call_types=WRITE_SYSCALLS
     ):
-        write_count = record['COUNT']
+        write_count = int(record['COUNT'])
         break
 
     print('Number of reads:' , read_count)
     print('Number of writes:' , write_count)
 
+    ret = list()
     if (write_count > 0):
-        return set().add(float(read_count) / float(write_count))
-    else:
-        return set()
+        ret.append([float(read_count) / float(write_count)])
+
+    return ret
 
 def get_read_write_ratio_of_program_between_ts(tx, raw_inputs):
     inputs = raw_inputs.split(' ')
@@ -338,7 +375,7 @@ def get_read_write_ratio_of_program_between_ts(tx, raw_inputs):
         ts_start=start_time,
         ts_end=end_time
     ):
-        read_count = record['COUNT']
+        read_count = int(record['COUNT'])
         break
 
     write_count = 0
@@ -351,23 +388,24 @@ def get_read_write_ratio_of_program_between_ts(tx, raw_inputs):
         ts_start=start_time,
         ts_end=end_time
     ):
-        write_count = record['COUNT']
+        write_count = int(record['COUNT'])
         break
 
     print('Number of reads:' , read_count)
     print('Number of writes:' , write_count)
 
+    ret = list()
     if (write_count > 0):
-        return set().add(float(read_count) / float(write_count))
-    else:
-        return set()
+        ret.append([float(read_count) / float(write_count)])
+
+    return ret
 
 def get_top_resource_utilizing_processes(tx, raw_inputs):
     ret = list()
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
         "RETURN PROC.process_id AS PROCESS_ID, PROC.name AS PROCESS_NAME, count(*) as COUNT "
-        "ORDER BY COUNT DESC"
+        "ORDER BY COUNT DESC LIMIT 25"
     ):
         ret.append((str(record['PROCESS_ID']), str(record['PROCESS_NAME']), str(record['COUNT'])))
 
@@ -378,7 +416,7 @@ def get_top_used_resources(tx, raw_inputs):
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
         "RETURN RES.name AS RESOURCE_NAME, count(*) as COUNT "
-        "ORDER BY COUNT DESC"
+        "ORDER BY COUNT DESC LIMIT 25"
     ):
         ret.append((str(record['RESOURCE_NAME']), str(record['COUNT'])))
 

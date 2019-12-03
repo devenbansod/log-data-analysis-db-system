@@ -13,17 +13,22 @@ if [[ $(id -u) -ne 0 ]] ; then
 fi
 
 # Get the parsed logs
+echo "** Started cleaning and parsing $3 **"
 cd parser/
 python main.py "../$3"
 cd ..
-
+echo "** Cleaning and Parsing completed **"
 
 # Run the reducer
+echo "** Started reduction **"
 cd reducer
 python main.py "../output/intermediate/forward.csv" "../output/intermediate/backward.csv" "../output/"
 cd ..
+echo "** Reduction completed **"
 
 # Import the reduced logs
+
+echo "** Starting data ingestion **"
 
 IMPORT_DIR="/var/lib/neo4j/import"
 CYPHER_BIN="cypher-shell"

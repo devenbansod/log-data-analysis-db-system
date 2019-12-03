@@ -38,12 +38,10 @@ def generate(events_final, csv_details, out_dir):
         if tag == 'FORWARD':
             forward_count += 1
             time_tuple = get_time_tuple(first_col)
-            print(time_tuple[0], time_tuple[1], float(time_tuple[0]) + float(time_tuple[1]) / 1000)
             l = [float(time_tuple[0]) + float(time_tuple[1]) / 1000, int(time_tuple[2]), u, csv_details[id][1], sys_call, v] #time_start, time_end]
             forward_writer.writerow(l)
         elif tag == 'BACKWARD':
             backward_count += 1
-            print(time_tuple[0], time_tuple[1], float(time_tuple[0]) + float(time_tuple[1]) / 1000)
             l = [float(time_tuple[0]) + float(time_tuple[1]) / 1000, int(time_tuple[2]), u, csv_details[id][1], sys_call, v] # time_start, time_end]
             backward_writer.writerow(l)
 

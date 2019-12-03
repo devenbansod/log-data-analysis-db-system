@@ -12,7 +12,7 @@ from collections import defaultdict
 from modules import FileMap, Stream, Event
 
 log = logging.getLogger(__name__)
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout, level=logging.ERROR)
 
 class ParseError(Exception):
     pass
@@ -105,7 +105,7 @@ class Parser(object):
         au.next_record()
         name = au.find_field('name')
         if not name:
-            log.debug("Name returned None: {0}".format(record_text))
+            # log.debug("Name returned None: {0}".format(record_text))
             return
 
         if fd not in ['0', '1', '2']:
