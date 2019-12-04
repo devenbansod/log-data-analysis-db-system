@@ -94,7 +94,7 @@ QUERIES = [
         'text': "Get the approximate read write ratio of a process",
         'follow_up': 'Enter the process ID (ex. 1234): ',
         'query': get_read_write_ratio_of_process,
-        'column_labels': ['Read/write ratio']
+        'column_labels': ['Read count', 'Write count', 'Read/write ratio']
     },
     {
         'text': "Get the approximate read write ratio of a program",
