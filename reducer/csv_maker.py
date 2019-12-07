@@ -47,6 +47,3 @@ def generate(events_final, csv_details, out_dir):
 
     forward_file.close()
     backward_file.close()
-
-    print "forward count --> ", forward_count
-    print "backward count --> ", backward_count
