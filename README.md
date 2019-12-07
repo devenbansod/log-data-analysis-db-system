@@ -60,6 +60,7 @@ du -h /var/lib/neo4j/data/databases/graph.db/
 
 ### Online Data ingestion
 
+>>>>>>> 30c90553ebb53c20da74d82ea366570457d6e248
 #### Start watching being-watched.log
 ```bash
 when-changed being-watched.log "sudo -E bash watcher.sh"
