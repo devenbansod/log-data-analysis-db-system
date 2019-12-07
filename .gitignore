@@ -1,4 +1,4 @@
 **/**/*.pyc
 data/input.log
-output/intermediate/*
+output/intermediate/*.csv
 output/*.csv
