@@ -18,6 +18,7 @@ cd parser/
 python main.py "../$3"
 cd ..
 echo "** Cleaning and Parsing completed **"
+echo ""
 
 # Run the reducer
 echo "** Started reduction **"
@@ -25,10 +26,9 @@ cd reducer
 python main.py "../output/intermediate/forward.csv" "../output/intermediate/backward.csv" "../output/"
 cd ..
 echo "** Reduction completed **"
+echo ""
 
 # Import the reduced logs
-
-echo "** Starting data ingestion **"
 
 IMPORT_DIR="/var/lib/neo4j/import"
 CYPHER_BIN="cypher-shell"
@@ -39,7 +39,15 @@ FORWARD_PATH="output/forward-reduced.csv"
 BACKWARD_PATH="output/backward-reduced.csv"
 
 # Add indexes
-CREATE INDEX ON :Person(firstname)
+echo "** Adding Indexes **"
+while read INDEX_QUERY; do
+	ADD_INDEX_QUERY="\"$INDEX_QUERY\""
+	eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_INDEX_QUERY}"
+done <indexes.list
+echo "** Indexes added **"
+echo ""
+
+echo "** Starting data ingestion **"
 
 # Add backward reduced logs
 cp $FORWARD_PATH "$IMPORT_DIR/forward-reduced.csv"
@@ -51,7 +59,7 @@ MERGE (n2:RESOURCE {name: line[5]})
 WITH line,n1,n2
 CREATE (n1)-[:USES {ts: line[0], serial: line[1], type: line[4]}]->(n2)
 \""
-eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_FORWARD_EDGES_QUERY}"
+eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_FORWARD_EDGES_QUERY} > out.txt"
 
 
 # Add backward reduced logs
@@ -65,7 +73,7 @@ MERGE (n2:RESOURCE {name: line[5]})
 WITH line,n1,n2
 CREATE (n1)-[:USES {ts: line[0], serial: line[1], type: line[4]}]->(n2)
 \""
-eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_BACKWARD_EDGES_QUERY}"
+eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_BACKWARD_EDGES_QUERY} >> out.txt"
 
 
 echo "** Data ingestion completed **"
