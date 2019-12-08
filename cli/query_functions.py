@@ -10,17 +10,24 @@ def get_all_possible_corrupted_processes_resources_from_process_id(tx, raw_input
     element = inputs[1]
 
     ret = set()
+    process_limit = 50
+    resource_limit = 50
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) -[:USES *0..2]- (ELEMENT) "
         "WHERE toInteger(PROC.process_id) = $process_id "
         "RETURN DISTINCT ELEMENT.process_id AS PROCESS_ID, ELEMENT.name AS NAME "
-        "ORDER BY PROCESS_ID DESC LIMIT 50",
+        "ORDER BY PROCESS_ID DESC",
         process_id=process_id
     ):
         if record['PROCESS_ID'] != None and element == 'process':
-            ret.add((record['NAME'], 'PROCESS'))
+            ret.add((str(record['PROCESS_ID']), str(record['NAME']), 'PROCESS'))
+            process_limit -= 1
         elif element == 'resource':
-            ret.add((record['NAME'][:40], 'RESOURCE'))
+            ret.add((str(record['NAME'][:40]), 'RESOURCE'))
+            resource_limit -= 1
+
+        if (process_limit <= 0 or resource_limit <= 0):
+            break
 
     return ret
 
@@ -84,10 +91,10 @@ def get_resources_for_process_id(tx, raw_inputs):
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
         "WHERE toInteger(PROC.process_id) = $process_id "
-        "RETURN DISTINCT RES.name AS RESOURCE_NAME",
+        "RETURN DISTINCT RES.name AS RESOURCE_NAME, COUNT(*) AS COUNT",
         process_id=process_id
     ):
-        ret.append([str(record['RESOURCE_NAME'])])
+        ret.append([str(record['RESOURCE_NAME']), str(record['COUNT'])])
 
     return ret
 
@@ -101,12 +108,12 @@ def get_resources_for_process_id_between_ts(tx, raw_inputs):
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE)"
         " WHERE toInteger(PROC.process_id) = $process_id AND toFloat(USE.ts) < $ts_start AND toFloat(USE.ts) > $ts_end"
-        " RETURN DISTINCT RES.name AS RESOURCE_NAME",
+        " RETURN DISTINCT RES.name AS RESOURCE_NAME, COUNT(*) AS COUNT",
         process_id = process_id,
         ts_start = start_time,
         ts_end = end_time
     ):
-        ret.append([str(record['RESOURCE_NAME'])])
+        ret.append([str(record['RESOURCE_NAME']), str(record['COUNT'])])
 
     return ret
 
@@ -117,11 +124,11 @@ def get_configuration_files_for_process_id(tx, raw_inputs):
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE)"
         " WHERE toInteger(PROC.process_id) = $process_id"
-        " RETURN DISTINCT RES.name AS RESOURCE_NAME",
+        " RETURN DISTINCT RES.name AS RESOURCE_NAME, COUNT(*) AS COUNT",
         process_id = process_id
     ):
         if _check_if_path_is_config_file(record['RESOURCE_NAME']):
-            ret.append([str(record['RESOURCE_NAME'])])
+            ret.append([str(record['RESOURCE_NAME']), str(record['COUNT'])])
 
     return ret
 
@@ -135,13 +142,13 @@ def get_configuration_files_for_process_id_between_ts(tx, raw_inputs):
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE)"
         " WHERE toInteger(PROC.process_id) = $process_id AND toFloat(USE.ts) <= $ts_start AND toFloat(USE.ts) >= $ts_end"
-        " RETURN RES.name AS RESOURCE_NAME",
+        " RETURN RES.name AS RESOURCE_NAME, COUNT(*) AS COUNT",
         process_id = process_id,
         ts_start = start_time,
         ts_end = end_time
     ):
         if _check_if_path_is_config_file(record['RESOURCE_NAME']):
-            ret.append([str(record['RESOURCE_NAME'])])
+            ret.append([str(record['RESOURCE_NAME']), str(record['COUNT'])])
 
     return ret
 
@@ -186,10 +193,10 @@ def get_resources_for_process_name(tx, raw_inputs):
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
         " WHERE PROC.name = $process_name"
-        " RETURN DISTINCT RES.name AS RESOURCE_NAME",
+        " RETURN DISTINCT RES.name AS RESOURCE_NAME, COUNT(*) AS COUNT",
         process_name=process_name
     ):
-        ret.append([str(record['RESOURCE_NAME'])])
+        ret.append([str(record['RESOURCE_NAME']), str(record['COUNT'])])
 
     return ret
 
@@ -203,12 +210,12 @@ def get_resources_for_process_name_between_ts(tx, raw_inputs):
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
         " WHERE PROC.name = $process_name AND toFloat(USE.ts) < $ts_start AND toFloat(USE.ts) > $ts_end"
-        " RETURN DISTINCT RES.name AS RESOURCE_NAME",
+        " RETURN DISTINCT RES.name AS RESOURCE_NAME, COUNT(*) AS COUNT",
         process_name=process_name,
         ts_start=start_time,
         ts_end=end_time
     ):
-        ret.add([str(record['RESOURCE_NAME'])])
+        ret.add([str(record['RESOURCE_NAME']), str(record['COUNT'])])
 
     return ret
 

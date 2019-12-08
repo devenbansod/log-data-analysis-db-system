@@ -32,6 +32,14 @@ sudo neo4j start
 * Open http://localhost:7474
 * Setup and remember server password (initial username and password is `neo4j`)
 
+### Install when-changed to watch the incoming logs
+
+```bash
+git clone https://github.com/joh/when-changed
+cd when-changed
+sudo python setup.py install
+```
+
 ## Demo
 
 ### Initial setup

@@ -44,13 +44,13 @@ QUERIES = [
         'text': "Get a list of resources accessed by a process",
         'follow_up': 'Enter the process ID (ex. 1234): ',
         'query': get_resources_for_process_id,
-        'column_labels': ['Resource name']
+        'column_labels': ['Resource name', 'Count']
     },
     {
         'text': "Get a list of configuration files accessed by a process",
         'follow_up': 'Enter the process ID (ex. 1234): ',
         'query': get_configuration_files_for_process_id,
-        'column_labels': ['Configuration resource name']
+        'column_labels': ['Configuration resource name', 'Count']
     },
     {
         'text': "Get a list of all process instances for a program name",
@@ -85,13 +85,13 @@ QUERIES = [
         'text': "Get a list of resources accessed by a process between start time and end time",
         'follow_up': 'Enter the process ID, start_time and end_time (space separated) (ex. 1234 1541873682.803 1641873682.803): ',
         'query': get_resources_for_process_id_between_ts,
-        'column_labels': ['Resource name']
+        'column_labels': ['Resource name', 'Count']
     },
     {
         'text': "Get a list of configuration files accessed by a process between start time and end time",
         'follow_up': 'Enter the process ID, start_time and end_time (space separated) (ex. 1234 1541873682.803 1641873682.803): ',
         'query': get_configuration_files_for_process_id_between_ts,
-        'column_labels': ['Configuration resource name']
+        'column_labels': ['Configuration resource name', 'Count']
     },
     {
         'text': "Get a list of all process instances for a program name between start time and end time",
@@ -103,7 +103,7 @@ QUERIES = [
         'text': "Get an aggregated list of resources accessed by all processes of a program name between start time and end time",
         'follow_up': 'Enter the program name, start_time and end_time (space separated) (ex. /bin/vi 1541873682.803 1641873682.803): ',
         'query': get_resources_for_process_name_between_ts,
-        'column_labels': ['Resource name']
+        'column_labels': ['Resource name', 'Count']
     },
     {
         'text': "Get a list of processes that accessed a resource between start time and end time",
