@@ -44,7 +44,7 @@ sudo python setup.py install
 
 ### Download Data
 
-#### Download files from this OneDrive folder to your data/ directory
+#### Download some sample Linux Audit Log files from this OneDrive folder to your data/ directory
 ```
 https://gtvault-my.sharepoint.com/:f:/g/personal/dbansod3_gatech_edu/Ek_MxbalghtHk4Gr5T7uyGQBT8GZtmYkar29aDmJqYgI0g?e=sreoRS
 ```
