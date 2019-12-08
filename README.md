@@ -42,6 +42,13 @@ sudo python setup.py install
 
 ## Demo
 
+### Download Data
+
+#### Download files from this OneDrive folder to your data/ directory
+```
+https://gtvault-my.sharepoint.com/:f:/g/personal/dbansod3_gatech_edu/Ek_MxbalghtHk4Gr5T7uyGQBT8GZtmYkar29aDmJqYgI0g?e=sreoRS
+```
+
 ### Initial setup
 
 #### Set password variable

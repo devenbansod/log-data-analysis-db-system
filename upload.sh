@@ -12,6 +12,7 @@ if [[ $(id -u) -ne 0 ]] ; then
     exit 1
 fi
 
+# Directory for passing data between files
 mkdir -p output/intermediate
 
 # Get the parsed logs
