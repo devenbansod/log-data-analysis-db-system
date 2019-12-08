@@ -12,6 +12,8 @@ if [[ $(id -u) -ne 0 ]] ; then
     exit 1
 fi
 
+mkdir -p output/intermediate
+
 # Get the parsed logs
 echo "** Started cleaning and parsing $3 **"
 cd parser/
