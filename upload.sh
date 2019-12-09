@@ -41,15 +41,6 @@ CYPHER_ARGS="-a $NEO4J_SERVER -u $USER -p $2"
 FORWARD_PATH="output/forward-reduced.csv"
 BACKWARD_PATH="output/backward-reduced.csv"
 
-# Add indexes
-echo "** Adding Indexes **"
-while read INDEX_QUERY; do
-	ADD_INDEX_QUERY="\"$INDEX_QUERY\""
-	eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_INDEX_QUERY}"
-done <indexes.list
-echo "** Indexes added **"
-echo ""
-
 echo "** Starting data ingestion **"
 
 # Add backward reduced logs
@@ -80,3 +71,12 @@ eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_BACKWARD_EDGES_QUERY} >> out.txt"
 
 
 echo "** Data ingestion completed **"
+echo ""
+
+# Add indexes
+echo "** Adding Indexes **"
+while read INDEX_QUERY; do
+	ADD_INDEX_QUERY="\"$INDEX_QUERY\""
+	eval "${CYPHER_BIN}" "${CYPHER_ARGS}" "${ADD_INDEX_QUERY}"
+done <indexes.list
+echo "** Indexes added **"
