@@ -95,6 +95,8 @@ du -h /var/lib/neo4j/data/databases/graph.db/
 
 ### CLI usage
 
+Now that the demo data has been ingested by the system, we can run queries on the data. The CLI is designed to be interactive.
+
 ```bash
 python main.py 127.0.0.1:7687 neo4j $PASS
 ```
