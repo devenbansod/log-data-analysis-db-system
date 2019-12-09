@@ -2,31 +2,21 @@ from query_functions import *
 
 QUERIES = [
     {
+        'text': "Get a list of resources accessed by a process",
+        'follow_up': 'Enter the process ID (ex. 1234): ',
+        'query': get_resources_for_process_id,
+        'column_labels': ['Resource name', 'Count']
+    },
+    {
+        'text': "Get a list of processes that accessed a resource",
+        'follow_up': 'Enter the resource name (ex. /etc/auditd.rules): ',
+        'query': get_process_ids_for_resource,
+        'column_labels': ['Process ID', 'Process name']
+    },
+    {
         'text': "Get count summary",
         'query': get_count_summary,
         'column_labels': ['PROCESS count', 'RESOURCE count', 'USES count']
-    },
-    {
-        'text': "Get the approximate read write ratio of a process",
-        'follow_up': 'Enter the process ID (ex. 1234): ',
-        'query': get_read_write_ratio_of_process,
-        'column_labels': ['Read count', 'Write count', 'Read/write ratio']
-    },
-    {
-        'text': "Get the approximate read write ratio of a program",
-        'follow_up': 'Enter the program name (ex. /bin/vi): ',
-        'query': get_read_write_ratio_of_program,
-        'column_labels': ['Read count', 'Write count', 'Read/write ratio']
-    },
-    {
-        'text': "Get the list of top resource-utilizing processes",
-        'query': get_top_resource_utilizing_processes,
-        'column_labels': ['Process ID', 'Process name', 'Count']
-    },
-    {
-        'text': "Get the list of most commonly used resources",
-        'query': get_top_used_resources,
-        'column_labels': ['Resource name', 'Count']
     },
     {
         'text': "Get a list of possibly corrupted processes given a corrupt process",
@@ -41,10 +31,26 @@ QUERIES = [
         'column_labels': ['Name', 'Type']
     },
     {
-        'text': "Get a list of resources accessed by a process",
-        'follow_up': 'Enter the process ID (ex. 1234): ',
-        'query': get_resources_for_process_id,
+        'text': "Get the list of top resource-utilizing processes",
+        'query': get_top_resource_utilizing_processes,
+        'column_labels': ['Process ID', 'Process name', 'Count']
+    },
+    {
+        'text': "Get the list of most commonly used resources",
+        'query': get_top_used_resources,
         'column_labels': ['Resource name', 'Count']
+    },
+    {
+        'text': "Get the approximate read write ratio of a process",
+        'follow_up': 'Enter the process ID (ex. 1234): ',
+        'query': get_read_write_ratio_of_process,
+        'column_labels': ['Read count', 'Write count', 'Read/write ratio']
+    },
+    {
+        'text': "Get the approximate read write ratio of a program",
+        'follow_up': 'Enter the program name (ex. /bin/vi): ',
+        'query': get_read_write_ratio_of_program,
+        'column_labels': ['Read count', 'Write count', 'Read/write ratio']
     },
     {
         'text': "Get a list of configuration files accessed by a process",
@@ -56,12 +62,6 @@ QUERIES = [
         'text': "Get a list of all process instances for a program name",
         'follow_up': 'Enter the program name (ex. /bin/vi): ',
         'query': get_process_ids_for_program_name,
-        'column_labels': ['Process ID', 'Process name']
-    },
-    {
-        'text': "Get a list of processes that accessed a resource",
-        'follow_up': 'Enter the resource name (ex. /etc/auditd.rules): ',
-        'query': get_process_ids_for_resource,
         'column_labels': ['Process ID', 'Process name']
     },
     {
