@@ -42,6 +42,13 @@ sudo python setup.py install
 
 ## Demo
 
+### Download Data
+
+#### Download some sample Linux Audit Log files from this OneDrive folder to your data/ directory
+```
+https://gtvault-my.sharepoint.com/:f:/g/personal/dbansod3_gatech_edu/Ek_MxbalghtHk4Gr5T7uyGQBFCGxjQtsfjyu_EYdkosWnA?e=bTUJbf
+```
+
 ### Initial setup
 
 #### Set password variable
@@ -88,6 +95,29 @@ du -h /var/lib/neo4j/data/databases/graph.db/
 
 ### CLI usage
 
+Now that the demo data has been ingested by the system, we can run queries on the data. The CLI is designed to be interactive.
+
 ```bash
 python main.py 127.0.0.1:7687 neo4j $PASS
 ```
+
+## Code References
+
+### Code Components Slightly Modified By Us:
+reducer/ folder:
+ * Folder contains the Causality Preserving Reduction (CPR) algorithm we use to reduce shrink the logs
+ * We modified the original source code to make it compatible with our log-ingestion pipeline
+ * Source: https://github.com/rbhat35/log-reducer 
+
+### Code Components Substantially Modified By Us:
+parser/ folder:
+ * Folder contains the log parser, which takes in raw system call logs, strips out irrelevant fields (e.g. register values), and deletes irrelevant system-calls (e.g. execve).
+ * We modified the set of parameters that is returned and made the code compatible with our pipeline
+ * Source: https://github.com/rbhat35/log-reducer 
+
+### Code Components Written By Us:
+cli/ and root directories, which include:
+ * Script to Insert Data into Neo4j
+ * Neo4j Queries—--21 Queries that are relevant to system call analysis
+ * Command-line interface
+ * Git diff-based system to ingest only new logs into the database
