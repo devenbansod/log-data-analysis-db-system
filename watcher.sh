@@ -56,6 +56,10 @@ if mkdir $LOCKDIR; then
     sudo bash upload.sh neo4j $PASS data/input.log
 
     echo "Upload complete, commit added"
+
+    cd .git/objects/
+    sudo chown deven:deven *
+    cd ../..
 else
     echo "Could not create lock directory '$LOCKDIR'"
     exit 1
