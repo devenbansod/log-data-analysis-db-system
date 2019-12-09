@@ -101,21 +101,23 @@ Now that the demo data has been ingested by the system, we can run queries on th
 python main.py 127.0.0.1:7687 neo4j $PASS
 ```
 
-## Code References (Debian/Ubuntu)
+## Code References
 
 ### Code Components Slightly Modified By Us:
 reducer/ folder:
- * contains the Causality Preserving Reduction (CPR) Algorithm found here: https://github.com/rbhat35/log-reducer 
- * modified the code to make it compatible with our log-ingestion pipeline
+ * Folder contains the Causality Preserving Reduction (CPR) algorithm we use to reduce shrink the logs
+ * We modified the original source code to make it compatible with our log-ingestion pipeline
+ * Source: https://github.com/rbhat35/log-reducer 
 
 ### Code Components Substantially Modified By Us:
 parser/ folder:
- * contains the log parser, which takes in raw system call logs, strips out irrelevant fields (e.g. register values), deletes irrelevant system-calls (e.g. execve). Can be found here: https://github.com/rbhat35/log-reducer 
- * tweaked what parameters are being parsed out and made the code compatible with our pipeline
+ * Folder contains the log parser, which takes in raw system call logs, strips out irrelevant fields (e.g. register values), and deletes irrelevant system-calls (e.g. execve).
+ * We modified the set of parameters that is returned and made the code compatible with our pipeline
+ * Source: https://github.com/rbhat35/log-reducer 
 
 ### Code Components Written By Us:
-cli/ and root directories:
+cli/ and root directories, which include:
  * Script to Insert Data into Neo4j
- * Neo4j Queries—21 Queries that are relevant to analysis
+ * Neo4j Queries—--21 Queries that are relevant to system call analysis
  * Command-line interface
- * Git diff-based system to only ingest new log info
+ * Git diff-based system to ingest only new logs into the database
