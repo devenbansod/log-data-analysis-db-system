@@ -109,12 +109,12 @@ reducer/ folder:
  * modified the code to make it compatible with our log-ingestion pipeline
 
 ### Code Components Substantially Modified By Us:
-parser/ folder
+parser/ folder:
  * contains the log parser, which takes in raw system call logs, strips out irrelevant fields (e.g. register values), deletes irrelevant system-calls (e.g. execve). Can be found here: https://github.com/rbhat35/log-reducer 
  * tweaked what parameters are being parsed out and made the code compatible with our pipeline
 
 ### Code Components Written By Us:
-cli/ and root directories
+cli/ and root directories:
  * Script to Insert Data into Neo4j
  * Neo4j Queries—21 Queries that are relevant to analysis
  * Command-line interface
