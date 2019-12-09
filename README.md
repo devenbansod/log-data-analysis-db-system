@@ -100,3 +100,21 @@ Now that the demo data has been ingested by the system, we can run queries on th
 ```bash
 python main.py 127.0.0.1:7687 neo4j $PASS
 ```
+
+## Code References (Debian/Ubuntu)
+
+### Code Components Slightly Modified By Us:
+#### reducer/ folder:
+ * contains the Causality Preserving Reduction (CPR) Algorithm found here: https://github.com/rbhat35/log-reducer 
+
+### Code Components Substantially Modified By Us:
+#### parser/ folder
+ * contains the log parser, which takes in raw system call logs, strips out irrelevant fields (e.g. register values), deletes irrelevant system-calls (e.g. execve). Can be found here: https://github.com/rbhat35/log-reducer 
+
+### Code Components Written By Us:
+#### cli/ and root directories
+ * Script to Insert Data into Neo4j
+ * Neo4j Queries—21 Queries that are relevant to analysis
+ * Command-line interface
+ * Git diff-based system to only ingest new log info
+
