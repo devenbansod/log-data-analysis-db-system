@@ -107,7 +107,8 @@ def get_resources_for_process_id_between_ts(tx, raw_inputs):
     ret = list()
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE)"
-        " WHERE toInteger(PROC.process_id) = $process_id AND toFloat(USE.ts) < $ts_start AND toFloat(USE.ts) > $ts_end"
+        " WHERE toInteger(PROC.process_id) = $process_id "
+        " AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end"
         " RETURN DISTINCT RES.name AS RESOURCE_NAME, COUNT(*) AS COUNT",
         process_id = process_id,
         ts_start = start_time,
@@ -141,7 +142,8 @@ def get_configuration_files_for_process_id_between_ts(tx, raw_inputs):
     ret = list()
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE)"
-        " WHERE toInteger(PROC.process_id) = $process_id AND toFloat(USE.ts) <= $ts_start AND toFloat(USE.ts) >= $ts_end"
+        " WHERE toInteger(PROC.process_id) = $process_id "
+        " AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end"
         " RETURN RES.name AS RESOURCE_NAME, COUNT(*) AS COUNT",
         process_id = process_id,
         ts_start = start_time,
@@ -175,7 +177,8 @@ def get_process_ids_for_program_name_between_ts(tx, raw_inputs):
     ret = set()
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE)"
-        " WHERE PROC.name = $process_name AND AND toFloat(USE.ts) <= $ts_start AND toFloat(USE.ts) >= $ts_end"
+        " WHERE PROC.name = $process_name"
+        " AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end"
         " RETURN PROC.process_id AS PROCESS_ID, PROC.name AS PROCESS_NAME",
         process_name=process_name,
         ts_start=start_time,
@@ -209,7 +212,8 @@ def get_resources_for_process_name_between_ts(tx, raw_inputs):
     ret = list()
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
-        " WHERE PROC.name = $process_name AND toFloat(USE.ts) < $ts_start AND toFloat(USE.ts) > $ts_end"
+        " WHERE PROC.name = $process_name "
+        " AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end"
         " RETURN DISTINCT RES.name AS RESOURCE_NAME, COUNT(*) AS COUNT",
         process_name=process_name,
         ts_start=start_time,
@@ -242,7 +246,8 @@ def get_process_ids_for_resource_between_ts(tx, raw_inputs):
     ret = set()
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
-        "WHERE RES.name = $resource_name AND toFloat(USE.ts) < $ts_start AND toFloat(USE.ts) > $ts_end "
+        "WHERE RES.name = $resource_name "
+        "AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end "
         "RETURN PROC.process_id AS PROCESS_ID, PROC.name AS PROCESS_NAME",
         resource_name=resource_name,
         ts_start=start_time,
@@ -272,7 +277,8 @@ def get_process_ids_for_config_resources_between_ts(tx, raw_inputs):
     ret = set()
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
-        "WHERE RES.name IN {resource_names} AND toFloat(USE.ts) < $ts_start AND toFloat(USE.ts) > $ts_end "
+        "WHERE RES.name IN {resource_names}"
+        "AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end "
         "RETURN PROC.process_id AS PROCESS_ID, PROC.name as PROCESS_NAME",
         resource_names=CONFIG_FILES,
         start_time=ts_start,
@@ -339,7 +345,8 @@ def get_read_write_ratio_of_process_between_ts(tx, raw_inputs):
     read_count = 0
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
-        "WHERE toInteger(PROC.process_id) = $process_id AND USE.type IN {call_types} AND toFloat(USE.ts) <= $ts_start AND toFloat(USE.ts) >= $ts_end "
+        "WHERE toInteger(PROC.process_id) = $process_id AND USE.type IN {call_types} "
+        "AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end "
         "RETURN COUNT(*) AS COUNT ",
         process_id=process_id,
         call_types=READ_SYSCALLS,
@@ -352,7 +359,8 @@ def get_read_write_ratio_of_process_between_ts(tx, raw_inputs):
     write_count = 0
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
-        "WHERE toInteger(PROC.process_id) = $process_id AND USE.type IN {call_types} AND toFloat(USE.ts) <= $ts_start AND toFloat(USE.ts) >= $ts_end "
+        "WHERE toInteger(PROC.process_id) = $process_id AND USE.type IN {call_types} "
+        "AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end "
         "RETURN COUNT(*) AS COUNT ",
         process_id=process_id,
         call_types=WRITE_SYSCALLS,
@@ -412,7 +420,8 @@ def get_read_write_ratio_of_program_between_ts(tx, raw_inputs):
     read_count = 0
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
-        "WHERE PROC.name = $program_name AND USE.type IN {call_types} AND toFloat(USE.ts) <= $ts_start AND toFloat(USE.ts) >= $ts_end "
+        "WHERE PROC.name = $program_name AND USE.type IN {call_types} "
+        "AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end "
         "RETURN COUNT(*) AS COUNT ",
         program_name=process_name,
         call_types=READ_SYSCALLS,
@@ -425,7 +434,8 @@ def get_read_write_ratio_of_program_between_ts(tx, raw_inputs):
     write_count = 0
     for record in tx.run(
         "MATCH (PROC :PROCESS) -[USE :USES]-> (RES :RESOURCE) "
-        "WHERE PROC.name = $program_name AND USE.type IN {call_types} AND toFloat(USE.ts) <= $ts_start AND toFloat(USE.ts) >= $ts_end "
+        "WHERE PROC.name = $program_name AND USE.type IN {call_types} "
+        "AND toFloat(USE.ts) >= $ts_start AND toFloat(USE.ts) <= $ts_end "
         "RETURN COUNT(*) AS COUNT ",
         program_name=process_name,
         call_types=WRITE_SYSCALLS,
