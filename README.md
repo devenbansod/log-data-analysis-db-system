@@ -104,20 +104,20 @@ python main.py 127.0.0.1:7687 neo4j $PASS
 ## Code References
 
 ### Code Components Slightly Modified By Us:
-reducer/ folder:
+`reducer/` folder in [1]:
  * Folder contains the Causality Preserving Reduction (CPR) algorithm we use to reduce shrink the logs
  * We modified the original source code to make it compatible with our log-ingestion pipeline
- * Source: https://github.com/rbhat35/log-reducer 
 
 ### Code Components Substantially Modified By Us:
-parser/ folder:
+`parser/` folder in [1]:
  * Folder contains the log parser, which takes in raw system call logs, strips out irrelevant fields (e.g. register values), and deletes irrelevant system-calls (e.g. execve).
- * We modified the set of parameters that is returned and made the code compatible with our pipeline
- * Source: https://github.com/rbhat35/log-reducer 
+ * We modified the set of parameters that is returned and made the code compatible with our pipeline 
 
 ### Code Components Written By Us:
-cli/ and root directories, which include:
- * Script to Insert Data into Neo4j
- * Neo4j Queries—--21 Queries that are relevant to system call analysis
- * Command-line interface
- * Git diff-based system to ingest only new logs into the database
+`cli/` and `root` directories, which include:
+ * Script to ingest data into Neo4j (`upload.sh`)
+ * Neo4j Queries - ~20 Queries that are relevant to system call log analysis (`cli/query_functions.py`)
+ * Command-line interface (`cli/*`)
+ * Git diff-based system to ingest only new logs into the database (`watcher.sh`)
+
+[1]: https://github.com/rbhat35/log-reducer
