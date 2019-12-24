@@ -2,6 +2,8 @@
 
 A database system for the efficient storage and querying of Linux audit logs.
 
+_Read more about the purpose of this system and its design [here](https://docs.google.com/presentation/d/1ZWzANJ9xi8FZeIqD7K0QuEHuY6InUSNafHj6FY9x_mo/edit?usp=sharing)._ 
+
 By Deven Bansod (devenbansod), Raghav Bhat (rbhat35), and Jitin George (jitin17).
 
 ## Installation (Debian/Ubuntu)
