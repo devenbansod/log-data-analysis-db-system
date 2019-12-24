@@ -1,6 +1,8 @@
 # Database system for Linux Data Log Analysis
 
-A library to help analyze Linux Audit System Call Logs. By Deven Bansod , Raghav Bhat, and Jitin George.
+A database system for the efficient storage and querying of Linux audit logs.
+
+By Deven Bansod (devenbansod), Raghav Bhat (rbhat35), and Jitin George (jitin17).
 
 ## Installation (Debian/Ubuntu)
 
