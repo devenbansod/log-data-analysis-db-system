@@ -1,5 +1,6 @@
 # Database system for Linux Data Log Analysis
 
+A library to help analyze Linux Audit System Call Logs. By Deven Bansod , Raghav Bhat, and Jitin George.
 
 ## Installation (Debian/Ubuntu)
 
